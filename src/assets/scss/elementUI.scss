@@ -1,0 +1,29 @@
+.el-table {
+  th.el-table__cell {
+    background-color: $color2;
+    color: $text-color;
+  }
+}
+
+.el-pagination {
+  &__total {
+    font-size: 1rem;
+    font-weight: bold;
+    color: $text-color;
+  }
+}
+
+.el-pager {
+
+  li {
+    color: $text-color;
+  }
+
+  li:hover {
+    color: $color2;
+  }
+
+  li.active {
+    color: $color3;
+  }
+}
