@@ -14,32 +14,14 @@
 import { defineComponent } from 'vue'
 import { ElConfigProvider } from 'element-plus'
 import lang from 'element-plus/lib/locale/lang/zh-tw'
-import {
-  Location,
-  Document,
-  Menu as IconMenu,
-  Setting,
-} from '@element-plus/icons-vue'
 
 export default defineComponent({
   components: {
     ElConfigProvider,
   },
   setup() {
-    const handleOpen = (key, keyPath) => {
-      console.log(key, keyPath)
-    }
-    const handleClose = (key, keyPath) => {
-      console.log(key, keyPath)
-    }
     return {
       locale: lang,
-      handleOpen,
-      handleClose,
-      Location,
-      Document,
-      IconMenu,
-      Setting
     }
   },
 })
