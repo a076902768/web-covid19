@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 class Api {
-  static SERVER = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://web-covid19-api-2.herokuapp.com';
+  static SERVER = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://web-covid19-api.herokuapp.com';
 
   static async callAxios(method, url, params, contentType, auth) {
     const headers = {};
