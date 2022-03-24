@@ -5,7 +5,6 @@ class BackendApi extends Api {
     const params = {
       page, city
     }
-    console.log(params);
     const res = await this.callAxios('POST', '/data', params, null, null);
     return res;
   }

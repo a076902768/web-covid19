@@ -50,24 +50,21 @@ export default defineComponent({
         ...searching,
       });
       if (res.code === 200) {
-        tableData.splice(0);
-        res.data.content.forEach((e) => {
-          tableData.push(e);
-        })
+        Object.assign(tableData, res.data.content);
         totalElement.value = res.data.totalElement
       }
       loading.value = false;
+      console.log(456);
+      console.log(res);
     };
 
     const getCityList = async () => {
-      loading.value = true;
       const res = await BackendApi.getCityList();
       if (res.code === 200) {
         res.data.forEach((e) => {
           cityList.push(e);
         })
       }
-      loading.value = false;
     }
 
     const currentChange = (e) => {
