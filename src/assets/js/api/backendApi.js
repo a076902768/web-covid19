@@ -1,9 +1,9 @@
 import Api from '@/assets/js/api/api.js';
 
 class BackendApi extends Api {
-  static async getData({ page, city }) {
+  static async getData({ page, city, startDt, endDt }) {
     const params = {
-      page, city
+      page, city, startDt, endDt
     }
     const res = await this.callAxios('POST', '/data', params, null, null);
     return res;

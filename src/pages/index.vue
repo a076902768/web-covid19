@@ -1,12 +1,34 @@
 <template>
   <div v-loading="loading">
     <div class="filter-bar">
-      <el-form>
+      <el-form inline>
         <el-form-item label="縣市">
-          <el-select v-model="searching.city" @change="changeCity">
+          <el-select v-model="search.city">
             <el-option :label="'全部'" :value="''" />
             <el-option v-for="(city, index) in cityList" :key="index" :label="city" :value="city" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="開始日期">
+          <el-date-picker
+            v-model="search.startDt"
+            :disabled-date="disabledStartDate"
+            type="date"
+            placeholder="開始日期"
+          />
+        </el-form-item>
+        <el-form-item label="結束日期">
+          <el-date-picker
+            v-model="search.endDt"
+            :disabled-date="disabledEndDate"
+            type="date"
+            placeholder="結束日期"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="getSearch">查詢</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="clear">清除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -35,8 +57,15 @@ export default defineComponent({
   name: 'App',
   setup() {
     const tableData = reactive([]);
+    const search = reactive({
+      city: null,
+      startDt: null,
+      endDt: null,
+    });
     const searching = reactive({
-      city: '',
+      city: null,
+      startDt: null,
+      endDt: null,
     });
     const cityList = reactive([]);
     const loading = ref(false);
@@ -54,8 +83,6 @@ export default defineComponent({
         totalElement.value = res.data.totalElement
       }
       loading.value = false;
-      console.log(456);
-      console.log(res);
     };
 
     const getCityList = async () => {
@@ -67,14 +94,38 @@ export default defineComponent({
       }
     }
 
+    const getSearch = () => {
+      Object.keys(search).forEach((key) => {
+        searching[key] = search[key];
+      });
+      page.value = 1;
+      getData();
+    }
+
+    const clear = () => {
+      reset();
+      getData();
+    }
+
+    const reset = () => {
+      Object.keys(search).forEach((key) => {
+        search[key] = null;
+        searching[key] = null;
+      });
+      page.value = 1;
+    }
+
     const currentChange = (e) => {
       page.value = e;
       getData();
     };
 
-    const changeCity = () => {
-      page.value = 1;
-      getData();
+    const disabledStartDate = (time) => {
+      return !search.endDt ? false : time.getTime() > search.endDt;
+    }
+
+    const disabledEndDate = (time) => {
+      return time.getTime() > Date.now() || time.getTime() < search.startDt
     }
 
     onMounted(() => {
@@ -86,11 +137,15 @@ export default defineComponent({
       loading,
       tableData,
       cityList,
+      search,
       searching,
       totalElement,
       page,
       currentChange,
-      changeCity,
+      getSearch,
+      clear,
+      disabledStartDate,
+      disabledEndDate
     }
   }
 })
