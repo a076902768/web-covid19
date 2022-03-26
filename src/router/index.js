@@ -5,6 +5,11 @@ const routes = [
     path: '/',
     name: 'index',
     component: () => import('../pages/index.vue')
+  },
+  {
+    path: '/chart',
+    name: 'chart',
+    component: () => import('../pages/chart.vue')
   }
 ]
 

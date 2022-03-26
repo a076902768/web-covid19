@@ -54,7 +54,6 @@ import { defineComponent, reactive, ref, onMounted } from 'vue'
 import BackendApi from '../assets/js/api/backendApi';
 
 export default defineComponent({
-  name: 'App',
   setup() {
     const tableData = reactive([]);
     const search = reactive({
