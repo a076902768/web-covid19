@@ -3,7 +3,7 @@
     <div class="filter-bar">
       <el-form inline>
         <el-form-item label="縣市">
-          <el-select v-model="search.city">
+          <el-select filterable v-model="search.city">
             <el-option :label="'全部'" :value="''" />
             <el-option v-for="(city, index) in cityList" :key="index" :label="city" :value="city" />
           </el-select>
@@ -11,6 +11,7 @@
         <el-form-item label="開始日期">
           <el-date-picker
             v-model="search.startDt"
+            value-format="YYYY-MM-DD"
             :disabled-date="disabledStartDate"
             type="date"
             placeholder="開始日期"
@@ -19,6 +20,7 @@
         <el-form-item label="結束日期">
           <el-date-picker
             v-model="search.endDt"
+            value-format="YYYY-MM-DD"
             :disabled-date="disabledEndDate"
             type="date"
             placeholder="結束日期"
@@ -32,13 +34,18 @@
         </el-form-item>
       </el-form>
     </div>
-    <el-table stripe :data="tableData" style="width: 100%">
+    <el-table
+      stripe
+      :default-sort="{ prop: 'a02', order: 'descending' }"
+      :data="tableData"
+      style="width: 100%"
+    >
       <el-table-column prop="a01" label="個案研判日" />
-      <el-table-column prop="a02" label="個案公佈日" />
+      <el-table-column prop="a02" sortable label="個案公佈日" />
       <el-table-column prop="a03" label="縣市" />
-      <el-table-column prop="a04" label="鄉鎮" />
-      <el-table-column prop="a05" label="性別" />
-      <el-table-column prop="a07" label="年齡層" />
+      <el-table-column prop="a04" label="區域" />
+      <el-table-column prop="a05" label="新增確診人數" />
+      <el-table-column prop="a06" label="累計確診人數" />
     </el-table>
     <el-pagination
       layout="total, prev, pager, next"
@@ -73,12 +80,16 @@ export default defineComponent({
 
     const getData = async () => {
       loading.value = true;
+      tableData.splice(0);
       const res = await BackendApi.getData({
         page: page.value,
         ...searching,
       });
       if (res.code === 200) {
-        Object.assign(tableData, res.data.content);
+        res.data.content.forEach((e) => {
+          tableData.push(e);
+        })
+        // Object.assign(tableData, res.data.content);
         totalElement.value = res.data.totalElement
       }
       loading.value = false;
@@ -120,11 +131,11 @@ export default defineComponent({
     };
 
     const disabledStartDate = (time) => {
-      return !search.endDt ? false : time.getTime() > search.endDt;
+      return !search.endDt ? false : time.getTime() > new Date(search.endDt).getTime();
     }
 
     const disabledEndDate = (time) => {
-      return time.getTime() > Date.now() || time.getTime() < search.startDt
+      return time.getTime() > Date.now() || time.getTime() < new Date(search.startDt).getTime();
     }
 
     onMounted(() => {
